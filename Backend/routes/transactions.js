@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const { body, validationResult } = require('express-validator'); // Import express-validator
 const Transaction = require('../models/Transaction');
 
 // Get all transactions
@@ -13,21 +14,33 @@ router.get('/', async (req, res) => {
 });
 
 // Add new transaction
-router.post('/', async (req, res) => {
-    const transaction = new Transaction({
-        amount: req.body.amount,
-        description: req.body.description,
-        date: req.body.date,
-        category: req.body.category
-    });
+router.post('/',
+    // Validation middleware
+    body('amount').isNumeric().withMessage('Amount must be a number'),
+    body('description').notEmpty().withMessage('Description is required'),
 
-    try {
-        const newTransaction = await transaction.save();
-        res.status(201).json(newTransaction);
-    } catch (err) {
-        res.status(400).json({ message: err.message });
+    async (req, res) => {
+        // Check for validation errors
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+
+        const transaction = new Transaction({
+            amount: req.body.amount,
+            description: req.body.description,
+            date: req.body.date,
+            category: req.body.category
+        });
+
+        try {
+            const newTransaction = await transaction.save();
+            res.status(201).json(newTransaction);
+        } catch (err) {
+            res.status(400).json({ message: err.message });
+        }
     }
-});
+);
 
 // Get single transaction
 router.get('/:id', async (req, res) => {
@@ -64,7 +77,7 @@ router.delete('/:id', async (req, res) => {
         const transaction = await Transaction.findById(req.params.id);
         if (!transaction) return res.status(404).json({ message: 'Transaction not found' });
 
-        await transaction.remove();
+        await transaction.deleteOne();
         res.json({ message: 'Transaction deleted' });
     } catch (err) {
         res.status(500).json({ message: err.message });

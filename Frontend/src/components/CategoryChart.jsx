@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 
-const CategoryChart = ({ transactions }) => {
+const CategoryChart = ({ transactions, currency = "$" }) => {
   const [chartData, setChartData] = useState([]);
-  
-  // Define colors for categories
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d', '#ffc658', '#8dd1e1', '#a4de6c', '#d0ed57', '#83a6ed'];
 
   useEffect(() => {
@@ -13,31 +11,12 @@ const CategoryChart = ({ transactions }) => {
       return;
     }
 
-    // Filter for expense transactions only
-    const expenses = transactions.filter(t => t.amount < 0);
-    
-    // Group by category
-    const categoryMap = {};
-    
-    expenses.forEach(transaction => {
-      const category = transaction.category || 'Uncategorized';
-      
-      if (!categoryMap[category]) {
-        categoryMap[category] = 0;
-      }
-      
-      categoryMap[category] += Math.abs(transaction.amount);
-    });
-    
-    // Convert to array format for PieChart
-    const data = Object.keys(categoryMap).map(category => ({
-      name: category,
-      value: categoryMap[category]
-    }));
-    
-    // Sort by value descending
-    data.sort((a, b) => b.value - a.value);
-    
+    const data = transactions
+      .filter(t => t.amount < 0) // Corrected filter
+      .map(transaction => ({
+        name: transaction.category || 'Uncategorized', // Using category name.
+        value: Math.abs(transaction.amount),
+      }));
     setChartData(data);
   }, [transactions]);
 
@@ -50,13 +29,12 @@ const CategoryChart = ({ transactions }) => {
     const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
     const x = cx + radius * Math.cos(-midAngle * RADIAN);
     const y = cy + radius * Math.sin(-midAngle * RADIAN);
-
     return (
-      <text 
-        x={x} 
-        y={y} 
-        fill="white" 
-        textAnchor={x > cx ? 'start' : 'end'} 
+      <text
+        x={x}
+        y={y}
+        fill="white"
+        textAnchor={x > cx ? 'start' : 'end'}
         dominantBaseline="central"
       >
         {`${(percent * 100).toFixed(0)}%`}
@@ -81,7 +59,7 @@ const CategoryChart = ({ transactions }) => {
             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
           ))}
         </Pie>
-        <Tooltip formatter={(value) => `$${value.toFixed(2)}`} />
+        <Tooltip formatter={(value) => `${currency}${value.toFixed(2)}`} />
         <Legend />
       </PieChart>
     </ResponsiveContainer>

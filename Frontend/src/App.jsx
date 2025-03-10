@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import {
   BrowserRouter as Router,
   Route,
-  Routes, // Updated import
+  Routes,
   Link,
+  Navigate,
 } from 'react-router-dom';
 import Dashboard from './components/Dashboard';
 import TransactionList from './components/TransactionList';
@@ -12,10 +13,11 @@ import EditTransaction from './components/EditTransaction';
 import CategorySummary from './components/CategorySummary';
 import BudgetSettings from './components/BudgetSettings';
 import BudgetComparison from './components/BudgetComparison';
+import Home from './components/Home'; // Import Home
 import './App.css';
 
 function App() {
-  const [activeTab, setActiveTab] = useState('dashboard');
+  const [activeTab, setActiveTab] = useState('home'); // Initial active tab
 
   return (
     <Router>
@@ -25,6 +27,13 @@ function App() {
           <nav className="main-nav">
             <Link
               to="/"
+              className={activeTab === 'home' ? 'active' : ''}
+              onClick={() => setActiveTab('home')}
+            >
+              Home
+            </Link>
+            <Link
+              to="/dashboard"
               className={activeTab === 'dashboard' ? 'active' : ''}
               onClick={() => setActiveTab('dashboard')}
             >
@@ -55,7 +64,8 @@ function App() {
         </header>
         <main className="app-main">
           <Routes>
-            <Route path="/" element={<Dashboard />} exact />
+            <Route path="/" element={<Home />} exact /> {/* Home route */}
+            <Route path="/dashboard" element={<Dashboard />} exact />
             <Route path="/transactions" element={<TransactionList />} exact />
             <Route path="/transactions/add" element={<AddTransaction />} />
             <Route path="/transactions/edit/:id" element={<EditTransaction />} />

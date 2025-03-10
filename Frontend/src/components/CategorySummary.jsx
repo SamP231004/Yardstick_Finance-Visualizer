@@ -13,37 +13,36 @@ const CategorySummary = () => {
       try {
         setLoading(true);
         const response = await axios.get('http://localhost:5000/api/transactions');
-        setTransactions(response.data);
-        
-        // Calculate category summary
+        setTransactions(response.data); // Pass full data to CategoryChart
+
+        // Calculate category summary (filter expenses here)
+        const filteredTransactions = response.data.filter(transaction => transaction.amount < 0);
         const categories = {};
-        
-        response.data.forEach(transaction => {
+
+        filteredTransactions.forEach(transaction => {
           const category = transaction.category || 'Uncategorized';
-          
+
           if (!categories[category]) {
             categories[category] = {
               category,
               totalAmount: 0,
               count: 0,
-              averageAmount: 0
+              averageAmount: 0,
             };
           }
-          
+
           categories[category].totalAmount += transaction.amount;
           categories[category].count++;
         });
-        
-        // Calculate averages and format for display
+
         const summaryData = Object.values(categories).map(item => ({
           ...item,
           averageAmount: item.totalAmount / item.count,
-          totalAmount: Math.abs(item.totalAmount)
+          totalAmount: Math.abs(item.totalAmount),
         }));
-        
-        // Sort by total amount (absolute value) descending
+
         summaryData.sort((a, b) => b.totalAmount - a.totalAmount);
-        
+
         setCategorySummary(summaryData);
         setLoading(false);
       } catch (err) {
@@ -67,21 +66,21 @@ const CategorySummary = () => {
   return (
     <div>
       {error && <div className="error-message">{error}</div>}
-      
+
       <div className="card">
         <div className="card-title">
           <h2>Spending by Category</h2>
         </div>
         <div className="chart-container">
-          <CategoryChart transactions={transactions} />
+          <CategoryChart transactions={transactions} /> // Pass full data
         </div>
       </div>
-      
+
       <div className="card">
         <div className="card-title">
           <h2>Category Breakdown</h2>
         </div>
-        
+
         {categorySummary.length === 0 ? (
           <div className="empty-state">
             <p>No category data available</p>

@@ -13,14 +13,19 @@ const TransactionList = () => {
 
   const fetchTransactions = async () => {
     try {
-      setLoading(true);
       const response = await axios.get('http://localhost:5000/api/transactions');
       setTransactions(response.data);
       setLoading(false);
-    } catch (err) {
-      setError('Failed to fetch transactions. Please try again later.');
+    } catch (error) {
+      if (error.response) {
+        setError(`Server Error: ${error.response.status} ${error.response.statusText}`);
+      } else if (error.request) {
+        setError('Network Error: Could not connect to server');
+      } else {
+        setError(`Error: ${error.message}`);
+      }
       setLoading(false);
-      console.error('Error fetching transactions:', err);
+      console.error('Error fetching transactions:', error);
     }
   };
 
@@ -50,9 +55,9 @@ const TransactionList = () => {
         <h2>Transactions</h2>
         <Link to="/transactions/add" className="btn">Add Transaction</Link>
       </div>
-      
+
       {error && <div className="error-message">{error}</div>}
-      
+
       {transactions.length === 0 ? (
         <div className="empty-state">
           <div className="empty-state-icon">📊</div>
@@ -81,8 +86,8 @@ const TransactionList = () => {
                   </td>
                   <td className="actions">
                     <Link to={`/transactions/edit/${transaction._id}`} className="btn btn-secondary">Edit</Link>
-                    <button 
-                      onClick={() => deleteTransaction(transaction._id)} 
+                    <button
+                      onClick={() => deleteTransaction(transaction._id)}
                       className="btn btn-danger"
                     >
                       Delete

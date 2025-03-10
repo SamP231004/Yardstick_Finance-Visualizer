@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const AddTransaction = () => {
@@ -12,7 +12,7 @@ const AddTransaction = () => {
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
-  const navigate = useNavigate(); // Use useNavigate
+  const navigate = useNavigate();
 
   const categories = [
     'Uncategorized',
@@ -34,7 +34,6 @@ const AddTransaction = () => {
       [e.target.name]: e.target.value,
     });
 
-    // Clear error for this field
     if (errors[e.target.name]) {
       setErrors({
         ...errors,
@@ -84,7 +83,7 @@ const AddTransaction = () => {
         amount: amountValue,
       });
 
-      navigate('/transactions'); // Use navigate
+      navigate('/transactions');
     } catch (err) {
       setError('Failed to add transaction. Please try again later.');
       setIsSubmitting(false);
@@ -101,7 +100,61 @@ const AddTransaction = () => {
       {error && <div className="error-message">{error}</div>}
 
       <form onSubmit={handleSubmit}>
-        {/* ... (rest of your form code) ... */}
+        <div className="form-group">
+          <label htmlFor="description">Description</label>
+          <input
+            type="text"
+            id="description"
+            name="description"
+            value={formData.description}
+            onChange={handleChange}
+            className={errors.description ? 'error' : ''}
+          />
+          {errors.description && <div className="error-message">{errors.description}</div>}
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="amount">Amount</label>
+          <input
+            type="text"
+            id="amount"
+            name="amount"
+            value={formData.amount}
+            onChange={handleChange}
+            className={errors.amount ? 'error' : ''}
+          />
+          {errors.amount && <div className="error-message">{errors.amount}</div>}
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="date">Date</label>
+          <input
+            type="date"
+            id="date"
+            name="date"
+            value={formData.date}
+            onChange={handleChange}
+            className={errors.date ? 'error' : ''}
+          />
+          {errors.date && <div className="error-message">{errors.date}</div>}
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="category">Category</label>
+          <select
+            id="category"
+            name="category"
+            value={formData.category}
+            onChange={handleChange}
+          >
+            {categories.map((category) => (
+              <option key={category} value={category}>
+                {category}
+              </option>
+            ))}
+          </select>
+        </div>
+
         <div className="form-actions">
           <button type="submit" className="btn" disabled={isSubmitting}>
             {isSubmitting ? 'Adding...' : 'Add Transaction'}
@@ -109,7 +162,7 @@ const AddTransaction = () => {
           <button
             type="button"
             className="btn btn-secondary"
-            onClick={() => navigate('/transactions')} // Use navigate
+            onClick={() => navigate('/transactions')}
             disabled={isSubmitting}
           >
             Cancel
