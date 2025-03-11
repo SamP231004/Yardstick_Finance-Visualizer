@@ -9,7 +9,7 @@ const BudgetComparison = () => {
   const [error, setError] = useState(null);
   const [month, setMonth] = useState(new Date().getMonth() + 1);
   const [year, setYear] = useState(new Date().getFullYear());
-  const baseURL = import.meta.env.VITE_REACT_APP_API_BASE_URL || 'http://localhost:5000'; // Corrected baseURL
+  const baseURL = import.meta.env.VITE_REACT_APP_API_BASE_URL || 'http://localhost:5000';
 
   const months = [
     { value: 1, label: 'January' },
@@ -28,13 +28,13 @@ const BudgetComparison = () => {
 
   useEffect(() => {
     fetchComparisonData();
-  }, [month, year, baseURL]); // added baseURL to dependency array
+  }, [month, year, baseURL]);
 
   const fetchComparisonData = async () => {
     try {
       setLoading(true);
       const response = await axios.get(
-        `${baseURL}/api/budgets/comparison?month=${month}&year=${year}` // Corrected axios.get URL
+        `${baseURL}/api/budgets/comparison?month=${month}&year=${year}`
       );
       setComparisonData(response.data);
       setLoading(false);

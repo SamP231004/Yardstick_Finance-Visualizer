@@ -7,13 +7,13 @@ const CategorySummary = () => {
   const [categorySummary, setCategorySummary] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const baseURL = import.meta.env.VITE_REACT_APP_API_BASE_URL || 'http://localhost:5000'; // Corrected baseURL
+  const baseURL = import.meta.env.VITE_REACT_APP_API_BASE_URL || 'http://localhost:5000';
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`${baseURL}/api/transactions`); // Corrected axios.get URL
+        const response = await axios.get(`${baseURL}/api/transactions`);
         setTransactions(response.data);
 
         const filteredTransactions = response.data.filter(transaction => transaction.amount < 0);
