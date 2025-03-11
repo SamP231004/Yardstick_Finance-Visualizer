@@ -9,7 +9,7 @@ const BudgetComparison = () => {
   const [error, setError] = useState(null);
   const [month, setMonth] = useState(new Date().getMonth() + 1);
   const [year, setYear] = useState(new Date().getFullYear());
-  const baseURL = import.meta.env.VITE_REACT_APP_API_BASE_URL || 'http://localhost:5000';
+  const baseURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
 
   const months = [
     { value: 1, label: 'January' },

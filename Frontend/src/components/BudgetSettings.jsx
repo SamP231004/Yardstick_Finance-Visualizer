@@ -14,7 +14,7 @@ const BudgetSettings = () => {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
-  const baseURL = import.meta.env.VITE_REACT_APP_API_BASE_URL || 'http://localhost:5000'; // Corrected baseURL
+  const baseURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
 
   const categories = [
     'Food',
@@ -45,12 +45,12 @@ const BudgetSettings = () => {
 
   useEffect(() => {
     fetchBudgets();
-  }, [baseURL]); // added baseURL to dependency array
+  }, [baseURL]);
 
   const fetchBudgets = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`${baseURL}/api/budgets`); // Corrected axios.get URL
+      const response = await axios.get(`${baseURL}/api/budgets`);
       setBudgets(response.data);
       setLoading(false);
     } catch (err) {
@@ -80,7 +80,7 @@ const BudgetSettings = () => {
     setSuccess(null);
 
     try {
-      await axios.post(`${baseURL}/api/budgets`, { // Corrected axios.post URL
+      await axios.post(`${baseURL}/api/budgets`, {
         ...formData,
         amount: parseFloat(formData.amount)
       });
@@ -103,7 +103,7 @@ const BudgetSettings = () => {
   const deleteBudget = async (id) => {
     if (window.confirm('Are you sure you want to delete this budget?')) {
       try {
-        await axios.delete(`${baseURL}/api/budgets/${id}`); // Corrected axios.delete URL
+        await axios.delete(`${baseURL}/api/budgets/${id}`);
         fetchBudgets();
       } catch (err) {
         setError('Failed to delete budget. Please try again later.');

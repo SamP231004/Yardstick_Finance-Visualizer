@@ -7,7 +7,7 @@ const CategorySummary = () => {
   const [categorySummary, setCategorySummary] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const baseURL = import.meta.env.VITE_REACT_APP_API_BASE_URL || 'http://localhost:5000';
+  const baseURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
 
   useEffect(() => {
     const fetchData = async () => {
@@ -53,7 +53,7 @@ const CategorySummary = () => {
     };
 
     fetchData();
-  }, [baseURL]); // added baseURL to dependency array
+  }, [baseURL]);
 
   if (loading) {
     return (

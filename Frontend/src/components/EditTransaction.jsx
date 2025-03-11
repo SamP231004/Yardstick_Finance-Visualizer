@@ -16,7 +16,7 @@ const EditTransaction = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
   const { id } = useParams();
-  const baseURL = import.meta.env.VITE_REACT_APP_API_BASE_URL || 'http://localhost:5000'; // Corrected baseURL
+  const baseURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
 
   const categories = [
     'Uncategorized',
@@ -35,7 +35,7 @@ const EditTransaction = () => {
   useEffect(() => {
     const fetchTransaction = async () => {
       try {
-        const response = await axios.get(`${baseURL}/api/transactions/${id}`); // Corrected axios.get URL
+        const response = await axios.get(`${baseURL}/api/transactions/${id}`);
         const transaction = response.data;
 
         setOriginalAmount(transaction.amount);
@@ -56,7 +56,7 @@ const EditTransaction = () => {
     };
 
     fetchTransaction();
-  }, [id, baseURL]); // added baseURL to dependency array
+  }, [id, baseURL]);
 
   const handleChange = (e) => {
     setFormData({
@@ -108,7 +108,7 @@ const EditTransaction = () => {
           ? Math.abs(parseFloat(formData.amount))
           : -Math.abs(parseFloat(formData.amount));
 
-      await axios.put(`${baseURL}/api/transactions/${id}`, { // Corrected axios.put URL
+      await axios.put(`${baseURL}/api/transactions/${id}`, {
         ...formData,
         amount: amountValue,
       });

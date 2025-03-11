@@ -15,7 +15,7 @@ const Dashboard = () => {
         const fetchDashboardData = async () => {
             setLoading(true);
             try {
-                const baseURL = import.meta.env.REACT_APP_API_BASE_URL || 'http://localhost:5000';
+                const baseURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
                 const [transactionsResponse, monthlyResponse, categoryResponse] = await axios.all([
                     axios.get(`${baseURL}/api/transactions`),
                     axios.get(`${baseURL}/api/transactions/summary/monthly`),

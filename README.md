@@ -86,7 +86,7 @@ To run the frontend of this application, follow these steps:
     * Add the following line to the `.env` file, replacing the URL with your backend API URL. If you are using the provided render URL, then use that.
 
         ```
-        REACT_APP_API_BASE_URL=https://yardstick-finance-visualizer.onrender.com/
+        VITE_API_BASE_URL=https://yardstick-finance-visualizer.onrender.com
         ```
 
 5.  **Start the Development Server:**
