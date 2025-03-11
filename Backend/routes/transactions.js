@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { body, validationResult } = require('express-validator'); // Import express-validator
+const { body, validationResult } = require('express-validator');
 const Transaction = require('../models/Transaction');
 
 // Get all transactions

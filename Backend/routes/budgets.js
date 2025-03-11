@@ -72,11 +72,9 @@ router.get('/comparison', async (req, res) => {
 
         const budgets = await Budget.find({ month, year });
 
-        // Get start and end date of the month
         const startDate = new Date(year, month - 1, 1);
         const endDate = new Date(year, month, 0);
 
-        // Get transactions for the month grouped by category
         const transactions = await Transaction.aggregate([
             {
                 $match: {
@@ -94,7 +92,6 @@ router.get('/comparison', async (req, res) => {
             }
         ]);
 
-        // Combine budget and actual data
         const comparison = budgets.map(budget => {
             const actual = transactions.find(t => t._id === budget.category);
             return {

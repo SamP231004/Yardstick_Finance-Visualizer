@@ -13,6 +13,7 @@ const AddTransaction = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const baseURL = import.meta.env.VITE_REACT_APP_API_BASE_URL || 'http://localhost:5000';
 
   const categories = [
     'Uncategorized',
@@ -78,7 +79,7 @@ const AddTransaction = () => {
           ? Math.abs(parseFloat(formData.amount))
           : -Math.abs(parseFloat(formData.amount));
 
-      await axios.post('http://localhost:5000/api/transactions', {
+      await axios.post(`${baseURL}/api/transactions`, {
         ...formData,
         amount: amountValue,
       });
@@ -92,14 +93,14 @@ const AddTransaction = () => {
   };
 
   return (
-    <div className="card">
+    <div className="addTransactionContainer">
       <div className="card-title">
         <h2>Add Transaction</h2>
       </div>
 
       {error && <div className="error-message">{error}</div>}
 
-      <form onSubmit={handleSubmit}>
+      <form className='addTransactionForm' onSubmit={handleSubmit}>
         <div className="form-group">
           <label htmlFor="description">Description</label>
           <input
@@ -155,7 +156,7 @@ const AddTransaction = () => {
           </select>
         </div>
 
-        <div className="form-actions">
+        <div className="addTransactionBtn">
           <button type="submit" className="btn" disabled={isSubmitting}>
             {isSubmitting ? 'Adding...' : 'Add Transaction'}
           </button>

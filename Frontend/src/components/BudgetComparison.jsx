@@ -1,4 +1,3 @@
-// frontend/src/components/BudgetComparison.js
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
@@ -10,6 +9,7 @@ const BudgetComparison = () => {
   const [error, setError] = useState(null);
   const [month, setMonth] = useState(new Date().getMonth() + 1);
   const [year, setYear] = useState(new Date().getFullYear());
+  const baseURL = import.meta.env.VITE_REACT_APP_API_BASE_URL || 'http://localhost:5000'; // Corrected baseURL
 
   const months = [
     { value: 1, label: 'January' },
@@ -28,13 +28,13 @@ const BudgetComparison = () => {
 
   useEffect(() => {
     fetchComparisonData();
-  }, [month, year]);
+  }, [month, year, baseURL]); // added baseURL to dependency array
 
   const fetchComparisonData = async () => {
     try {
       setLoading(true);
       const response = await axios.get(
-        `http://localhost:5000/api/budgets/comparison?month=${month}&year=${year}`
+        `${baseURL}/api/budgets/comparison?month=${month}&year=${year}` // Corrected axios.get URL
       );
       setComparisonData(response.data);
       setLoading(false);

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom'; // Updated imports
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 
 const EditTransaction = () => {
@@ -14,8 +14,9 @@ const EditTransaction = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const navigate = useNavigate(); // Use useNavigate
+  const navigate = useNavigate();
   const { id } = useParams();
+  const baseURL = import.meta.env.VITE_REACT_APP_API_BASE_URL || 'http://localhost:5000'; // Corrected baseURL
 
   const categories = [
     'Uncategorized',
@@ -34,7 +35,7 @@ const EditTransaction = () => {
   useEffect(() => {
     const fetchTransaction = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/transactions/${id}`);
+        const response = await axios.get(`${baseURL}/api/transactions/${id}`); // Corrected axios.get URL
         const transaction = response.data;
 
         setOriginalAmount(transaction.amount);
@@ -55,7 +56,7 @@ const EditTransaction = () => {
     };
 
     fetchTransaction();
-  }, [id]);
+  }, [id, baseURL]); // added baseURL to dependency array
 
   const handleChange = (e) => {
     setFormData({
@@ -63,7 +64,6 @@ const EditTransaction = () => {
       [e.target.name]: e.target.value,
     });
 
-    // Clear error for this field
     if (errors[e.target.name]) {
       setErrors({
         ...errors,
@@ -108,12 +108,12 @@ const EditTransaction = () => {
           ? Math.abs(parseFloat(formData.amount))
           : -Math.abs(parseFloat(formData.amount));
 
-      await axios.put(`http://localhost:5000/api/transactions/${id}`, {
+      await axios.put(`${baseURL}/api/transactions/${id}`, { // Corrected axios.put URL
         ...formData,
         amount: amountValue,
       });
 
-      navigate('/transactions'); // Use navigate
+      navigate('/transactions');
     } catch (err) {
       setError('Failed to update transaction. Please try again later.');
       setIsSubmitting(false);
@@ -146,7 +146,7 @@ const EditTransaction = () => {
           <button
             type="button"
             className="btn btn-secondary"
-            onClick={() => navigate('/transactions')} // Use navigate
+            onClick={() => navigate('/transactions')}
             disabled={isSubmitting}
           >
             Cancel

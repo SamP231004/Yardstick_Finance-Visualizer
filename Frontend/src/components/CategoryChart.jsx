@@ -12,9 +12,9 @@ const CategoryChart = ({ transactions, currency = "$" }) => {
     }
 
     const data = transactions
-      .filter(t => t.amount < 0) // Corrected filter
+      .filter(t => t.amount < 0)
       .map(transaction => ({
-        name: transaction.category || 'Uncategorized', // Using category name.
+        name: transaction.category || 'Uncategorized',
         value: Math.abs(transaction.amount),
       }));
     setChartData(data);

@@ -15,7 +15,7 @@ const Dashboard = () => {
         const fetchDashboardData = async () => {
             setLoading(true);
             try {
-                const baseURL = import.meta.env.VITE_REACT_APP_API_BASE_URL || 'http://localhost:5000';
+                const baseURL = import.meta.env.REACT_APP_API_BASE_URL || 'http://localhost:5000';
                 const [transactionsResponse, monthlyResponse, categoryResponse] = await axios.all([
                     axios.get(`${baseURL}/api/transactions`),
                     axios.get(`${baseURL}/api/transactions/summary/monthly`),
@@ -90,45 +90,47 @@ const Dashboard = () => {
                     {console.dir("Monthly Summary:", monthlySummary)}
                 </div>
                 <div className="chart-container">
-                    <CategoryChart transactions={transactions} currency="Rs" /> // Use transactions here.
+                    <CategoryChart transactions={transactions} currency="Rs" />
                 </div>
             </div>
 
-            <h2 className="recent-transactions-title">Recent Transactions</h2>
-            {Array.isArray(transactions) && transactions.length === 0 ? (
-                <div className="empty-state">
-                    <div className="empty-state-icon">📊</div>
-                    <p>No transactions yet. <Link to="/transactions/add">Add your first transaction</Link> to get started!</p>
-                </div>
-            ) : Array.isArray(transactions) ? (
-                <div className="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Description</th>
-                                <th>Category</th>
-                                <th>Amount</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {transactions.slice(0, 5).map(transaction => (
-                                <tr key={transaction._id}>
-                                    <td>{new Date(transaction.date).toLocaleDateString()}</td>
-                                    <td>{transaction.description}</td>
-                                    <td>{transaction.category}</td>
-                                    <td className={transaction.amount < 0 ? 'text-danger' : 'text-success'}>
-                                        Rs {Math.abs(transaction.amount).toFixed(2)}
-                                    </td>
+            <div className='TableComponent'>
+                <h2 className="recent-transactions-title">Recent Transactions</h2>
+                {Array.isArray(transactions) && transactions.length === 0 ? (
+                    <div className="empty-state">
+                        <div className="empty-state-icon">📊</div>
+                        <p>No transactions yet. <Link to="/transactions/add">Add your first transaction</Link> to get started!</p>
+                    </div>
+                ) : Array.isArray(transactions) ? (
+                    <div className="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Description</th>
+                                    <th>Category</th>
+                                    <th>Amount</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                    <Link to="/transactions" className="btn btn-secondary">View All Transactions</Link>
-                </div>
-            ) : (
-                <div className="error-message">Error: Transactions data is not available.</div>
-            )}
+                            </thead>
+                            <tbody>
+                                {transactions.slice(0, 5).map(transaction => (
+                                    <tr key={transaction._id}>
+                                        <td>{new Date(transaction.date).toLocaleDateString()}</td>
+                                        <td>{transaction.description}</td>
+                                        <td>{transaction.category}</td>
+                                        <td className={transaction.amount < 0 ? 'text-danger' : 'text-success'}>
+                                            Rs {Math.abs(transaction.amount).toFixed(2)}
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                        <Link to="/transactions" className="btn btn-secondary">View All Transactions</Link>
+                    </div>
+                ) : (
+                    <div className="error-message">Error: Transactions data is not available.</div>
+                )}
+            </div>
         </div>
     );
 };

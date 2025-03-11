@@ -1,6 +1,6 @@
 console.log("This is the correct server.js file!");
 
-require('dotenv').config(); // Load environment variables from .env
+require('dotenv').config();
 
 const express = require('express');
 const mongoose = require('mongoose');
@@ -19,7 +19,6 @@ app.use(cors());
 app.use(express.json());
 
 // Routes
-// app.use('/api/transactions', transactions); // Un-commented transactions route
 app.use('/api/budgets', budgets);
 
 // MongoDB Connection
@@ -33,15 +32,15 @@ mongoose.connect(MONGODB_URI)
 
 // Monthly Summary Route (Corrected)
 app.get('/api/transactions/summary/monthly', async (req, res) => {
-    console.log("Monthly summary route hit!"); // Add this line for debugging
+    console.log("Monthly summary route hit!");
     try {
         const transactions = await Transaction.find();
-        console.log("Fetched Transactions:", JSON.stringify(transactions, null, 2));
+        // console.log("Fetched Transactions:", JSON.stringify(transactions, null, 2));
         const monthlySummary = {};
 
         transactions.forEach(transaction => {
             const date = new Date(transaction.date);
-            const month = date.getMonth() + 1; // Months are 0-indexed
+            const month = date.getMonth() + 1;
             const year = date.getFullYear();
             const monthYearKey = `${year}-${month}`;
 

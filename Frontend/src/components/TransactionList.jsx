@@ -6,6 +6,7 @@ const TransactionList = () => {
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const baseURL = import.meta.env.VITE_REACT_APP_API_BASE_URL || 'http://localhost:5000';
 
   useEffect(() => {
     fetchTransactions();
@@ -13,17 +14,16 @@ const TransactionList = () => {
 
   const fetchTransactions = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/transactions');
+      if (!baseURL) {
+        throw new Error("VITE_REACT_APP_API_BASE_URL is not defined in .env");
+      }
+      const apiUrl = `${baseURL}/api/transactions`;
+      console.log("Fetching from:", apiUrl);
+      const response = await axios.get(apiUrl);
       setTransactions(response.data);
       setLoading(false);
     } catch (error) {
-      if (error.response) {
-        setError(`Server Error: ${error.response.status} ${error.response.statusText}`);
-      } else if (error.request) {
-        setError('Network Error: Could not connect to server');
-      } else {
-        setError(`Error: ${error.message}`);
-      }
+      setError(error.message || 'An unexpected error occurred.');
       setLoading(false);
       console.error('Error fetching transactions:', error);
     }
@@ -32,7 +32,7 @@ const TransactionList = () => {
   const deleteTransaction = async (id) => {
     if (window.confirm('Are you sure you want to delete this transaction?')) {
       try {
-        await axios.delete(`http://localhost:5000/api/transactions/${id}`);
+        await axios.delete(`${baseURL}/api/transactions/${id}`);
         fetchTransactions();
       } catch (err) {
         setError('Failed to delete transaction. Please try again later.');
@@ -50,7 +50,7 @@ const TransactionList = () => {
   }
 
   return (
-    <div className="card">
+    <div className="Transactioncard">
       <div className="card-title">
         <h2>Transactions</h2>
         <Link to="/transactions/add" className="btn">Add Transaction</Link>
@@ -82,7 +82,7 @@ const TransactionList = () => {
                   <td>{transaction.description}</td>
                   <td>{transaction.category}</td>
                   <td className={transaction.amount < 0 ? 'text-danger' : 'text-success'}>
-                    ${Math.abs(transaction.amount).toFixed(2)}
+                    Rs {Math.abs(transaction.amount).toFixed(2)}
                   </td>
                   <td className="actions">
                     <Link to={`/transactions/edit/${transaction._id}`} className="btn btn-secondary">Edit</Link>

@@ -13,17 +13,17 @@ import EditTransaction from './components/EditTransaction';
 import CategorySummary from './components/CategorySummary';
 import BudgetSettings from './components/BudgetSettings';
 import BudgetComparison from './components/BudgetComparison';
-import Home from './components/Home'; // Import Home
+import Home from './components/Home';
 import './App.css';
 
 function App() {
-  const [activeTab, setActiveTab] = useState('home'); // Initial active tab
+  const [activeTab, setActiveTab] = useState('home');
 
   return (
     <Router>
       <div className="app-container">
         <header className="app-header">
-          <h1>Personal Finance Tracker</h1>
+          <h1 className='financeHeading'>Finance Tracker</h1>
           <nav className="main-nav">
             <Link
               to="/"
@@ -74,9 +74,6 @@ function App() {
             <Route path="/budgets/comparison" element={<BudgetComparison />} />
           </Routes>
         </main>
-        <footer className="app-footer">
-          <p>&copy; 2025 Personal Finance Tracker</p>
-        </footer>
       </div>
     </Router>
   );

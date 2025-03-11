@@ -7,15 +7,15 @@ const CategorySummary = () => {
   const [categorySummary, setCategorySummary] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const baseURL = import.meta.env.VITE_REACT_APP_API_BASE_URL || 'http://localhost:5000'; // Corrected baseURL
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('http://localhost:5000/api/transactions');
-        setTransactions(response.data); // Pass full data to CategoryChart
+        const response = await axios.get(`${baseURL}/api/transactions`); // Corrected axios.get URL
+        setTransactions(response.data);
 
-        // Calculate category summary (filter expenses here)
         const filteredTransactions = response.data.filter(transaction => transaction.amount < 0);
         const categories = {};
 
@@ -53,7 +53,7 @@ const CategorySummary = () => {
     };
 
     fetchData();
-  }, []);
+  }, [baseURL]); // added baseURL to dependency array
 
   if (loading) {
     return (
@@ -64,20 +64,20 @@ const CategorySummary = () => {
   }
 
   return (
-    <div>
+    <div className='CategoryContainer'>
       {error && <div className="error-message">{error}</div>}
 
-      <div className="card">
-        <div className="card-title">
+      <div className="categoryCard">
+        <div className="categoryTitle">
           <h2>Spending by Category</h2>
         </div>
         <div className="chart-container">
-          <CategoryChart transactions={transactions} /> // Pass full data
+          <CategoryChart transactions={transactions} />
         </div>
       </div>
 
-      <div className="card">
-        <div className="card-title">
+      <div className="categoryCard">
+        <div className="categoryTitle">
           <h2>Category Breakdown</h2>
         </div>
 
@@ -100,9 +100,9 @@ const CategorySummary = () => {
                 {categorySummary.map(item => (
                   <tr key={item.category}>
                     <td>{item.category}</td>
-                    <td>${item.totalAmount.toFixed(2)}</td>
+                    <td>Rs {item.totalAmount.toFixed(2)}</td>
                     <td>{item.count}</td>
-                    <td>${Math.abs(item.averageAmount).toFixed(2)}</td>
+                    <td>Rs {Math.abs(item.averageAmount).toFixed(2)}</td>
                   </tr>
                 ))}
               </tbody>

@@ -14,6 +14,7 @@ const BudgetSettings = () => {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
+  const baseURL = import.meta.env.VITE_REACT_APP_API_BASE_URL || 'http://localhost:5000'; // Corrected baseURL
 
   const categories = [
     'Food',
@@ -44,12 +45,12 @@ const BudgetSettings = () => {
 
   useEffect(() => {
     fetchBudgets();
-  }, []);
+  }, [baseURL]); // added baseURL to dependency array
 
   const fetchBudgets = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('http://localhost:5000/api/budgets');
+      const response = await axios.get(`${baseURL}/api/budgets`); // Corrected axios.get URL
       setBudgets(response.data);
       setLoading(false);
     } catch (err) {
@@ -68,28 +69,28 @@ const BudgetSettings = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!formData.amount || isNaN(formData.amount) || parseFloat(formData.amount) <= 0) {
       setError('Please enter a valid amount');
       return;
     }
-    
+
     setSubmitting(true);
     setError(null);
     setSuccess(null);
-    
+
     try {
-      await axios.post('http://localhost:5000/api/budgets', {
+      await axios.post(`${baseURL}/api/budgets`, { // Corrected axios.post URL
         ...formData,
         amount: parseFloat(formData.amount)
       });
-      
+
       setSuccess('Budget added successfully!');
       setFormData({
         ...formData,
         amount: ''
       });
-      
+
       fetchBudgets();
     } catch (err) {
       setError('Failed to add budget. Please try again later.');
@@ -102,7 +103,7 @@ const BudgetSettings = () => {
   const deleteBudget = async (id) => {
     if (window.confirm('Are you sure you want to delete this budget?')) {
       try {
-        await axios.delete(`http://localhost:5000/api/budgets/${id}`);
+        await axios.delete(`${baseURL}/api/budgets/${id}`); // Corrected axios.delete URL
         fetchBudgets();
       } catch (err) {
         setError('Failed to delete budget. Please try again later.');
@@ -112,16 +113,16 @@ const BudgetSettings = () => {
   };
 
   return (
-    <div>
-      <div className="card">
-        <div className="card-title">
+    <div className='budgetContainer'>
+      <div className="budgetCard">
+        <div className="budgetTitle">
           <h2>Budget Settings</h2>
-          <Link to="/budgets/comparison" className="btn btn-secondary">View Comparison</Link>
+          <Link to="/budgets/comparison" className="budgetBtn">View Comparison</Link>
         </div>
-        
+
         {error && <div className="error-message">{error}</div>}
         {success && <div className="success-message">{success}</div>}
-        
+
         <form onSubmit={handleSubmit}>
           <div className="form-row">
             <div className="form-group">
@@ -138,9 +139,9 @@ const BudgetSettings = () => {
                 ))}
               </select>
             </div>
-            
+
             <div className="form-group">
-              <label htmlFor="amount">Budget Amount ($)</label>
+              <label htmlFor="amount">Budget Amount (Rs)</label>
               <input
                 type="number"
                 id="amount"
@@ -152,7 +153,7 @@ const BudgetSettings = () => {
                 placeholder="0.00"
               />
             </div>
-            
+
             <div className="form-group">
               <label htmlFor="month">Month</label>
               <select
@@ -167,7 +168,7 @@ const BudgetSettings = () => {
                 ))}
               </select>
             </div>
-            
+
             <div className="form-group">
               <label htmlFor="year">Year</label>
               <input
@@ -182,18 +183,18 @@ const BudgetSettings = () => {
               />
             </div>
           </div>
-          
-          <button type="submit" className="btn" disabled={submitting}>
+
+          <button className="addBudget" type="submit" disabled={submitting}>
             {submitting ? 'Adding...' : 'Add Budget'}
           </button>
         </form>
       </div>
-      
-      <div className="card">
-        <div className="card-title">
+
+      <div className="budgetCard">
+        <div className="budgetTitle">
           <h2>Current Budgets</h2>
         </div>
-        
+
         {loading ? (
           <div className="loading">
             <div className="loading-spinner"></div>
@@ -218,12 +219,12 @@ const BudgetSettings = () => {
                 {budgets.map(budget => (
                   <tr key={budget._id}>
                     <td>{budget.category}</td>
-                    <td>${budget.amount.toFixed(2)}</td>
+                    <td>Rs {budget.amount.toFixed(2)}</td>
                     <td>{months.find(m => m.value === budget.month)?.label}</td>
                     <td>{budget.year}</td>
                     <td>
-                      <button 
-                        onClick={() => deleteBudget(budget._id)} 
+                      <button
+                        onClick={() => deleteBudget(budget._id)}
                         className="btn btn-danger"
                       >
                         Delete
