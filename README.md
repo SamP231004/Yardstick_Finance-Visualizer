@@ -24,12 +24,12 @@ This is a personal finance tracker application built using the **MERN stack**: *
     -   🛣️ React Router (for navigation)
     -   📈 Recharts (for charts)
 -   **Backend:**
-    - ⚙️ Node.js
-    - 🚀 Express.js
-    - 💾 MongoDB (for database)
-    - 🐘 Mongoose (for MongoDB object modeling)
+    -   ⚙️ Node.js
+    -   🚀 Express.js
+    -   💾 MongoDB (for database)
+    -   🐘 Mongoose (for MongoDB object modeling)
 -   **⚙️ Environment Variables:**
-    - Vite (.env) for frontend configuration.
+    -   Vite (.env) for frontend configuration.
 
 ## 🚀 Usage
 
@@ -57,3 +57,42 @@ Contributions are welcome! Please feel free to submit a pull request.
 ![alt text](Frontend/Images_Used/ScreenShots/4.png)
 
 ![alt text](Frontend/Images_Used/ScreenShots/5.png)
+
+## ⚙️ Setup Instructions (Frontend)
+
+To run the frontend of this application, follow these steps:
+
+1.  **Clone the Repository:**
+
+    ```bash
+    git clone https://github.com/SamP231004/Yardstick_Finance-Visualizer
+    ```
+
+2.  **Navigate to the Frontend Directory:**
+
+    ```bash
+    cd Frontend
+    ```
+
+3.  **Install Dependencies:**
+
+    ```bash
+    npm install
+    ```
+
+4.  **Create the `.env` File:**
+
+    * In the `Frontend` directory, create a new file named `.env`.
+    * Add the following line to the `.env` file, replacing the URL with your backend API URL. If you are using the provided render URL, then use that.
+
+        ```
+        REACT_APP_API_BASE_URL=https://yardstick-finance-visualizer.onrender.com/
+        ```
+
+5.  **Start the Development Server:**
+
+    ```bash
+    npm run dev
+    ```
+
+    This will start the React development server. Open your browser to view the application.
